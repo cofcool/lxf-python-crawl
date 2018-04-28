@@ -14,11 +14,11 @@ BOT_NAME = 'lxf'
 SPIDER_MODULES = ['lxf.spiders']
 NEWSPIDER_MODULE = 'lxf.spiders'
 
-LOG_FILE = "lxf.log"
+# LOG_FILE = "lxf.log"
 LOG_LEVEL = "DEBUG"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:59.0) Gecko/20100101 Firefox/59.0'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:59.0) Gecko/20100101 Firefox/58.0'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -35,16 +35,21 @@ DOWNLOAD_DELAY = 3
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-#}
+DEFAULT_REQUEST_HEADERS = {
+   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+   'Accept-Language': 'en',
+   'Accept-Language': 'en-US,en;q=0.7,zh-CN;q=0.3',
+   'Cache-Control': 'no-cache',
+   'Connection': 'keep-alive',
+   'Cookie': 'Hm_lvt_2efddd14a5f2b304677462d06fb4f964=1524823320; Hm_lpvt_2efddd14a5f2b304677462d06fb4f964=1524907252; atsp=1524907233338_1524907235980',
+   'Referer': 'https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000'
+}
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html

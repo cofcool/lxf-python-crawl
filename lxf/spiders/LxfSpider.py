@@ -10,26 +10,29 @@ class LxfSpider(scrapy.Spider):
     def parse(self, response):
         lxfItem = LxfItem()
         lxfItem['subMenus'] = []
+        lxfItem['content'] = ''
         topLevel = response.xpath('//ul[@id="x-wiki-index"]')
 
         self.parse_menus(lxfItem, topLevel)
 
-        # self.parse_links(lxfItem)
+        links = []
+        self.parse_links(lxfItem['subMenus'][0], links)
+        for link in links:
+            yield scrapy.Request("https://" + LxfSpider.allowed_domains[0] + link, callback=self.parse_content)
 
         yield lxfItem
 
-
-    def parse_links(self, lxfItem):
-        for subItem in lxfItem['subMenus']:
-            self.parse_links(subItem)
-
-        yield scrapy.Request(lxfItem['menuHref'], callback='parse_content')
+    def parse_links(self, item, links):
+        links.append(item['menuHref'].encode('utf-8'))
+        for subMenu in item['subMenus']:
+            self.parse_links(subMenu, links)
 
     def parse_menus(self, lxfItem, response):
         nextlevel = response.xpath('./div')
         for levelItem in nextlevel:
             subItem = LxfItem()
             subItem['subMenus'] = []
+            subItem['content'] = ''
             subItem['level'] = levelItem.xpath('./@depth')[0].extract()
             subItem['menuname'] = levelItem.xpath('./a/text()')[0].extract()
             subItem['menuHref'] = levelItem.xpath('./a/@href')[0].extract()
@@ -38,11 +41,13 @@ class LxfSpider(scrapy.Spider):
 
             self.parse_menus(subItem, levelItem)
 
-
     def parse_content(self, response):
         contentStr = ''
         contents = response.xpath('//div[@class="x-wiki-content x-main-content"]/*/text()')
         for content in contents:
             contentStr = contentStr + content.extract()
 
-        return contentStr
+        lxfItem = LxfItem()
+        lxfItem['content'] = contentStr
+
+        yield lxfItem
