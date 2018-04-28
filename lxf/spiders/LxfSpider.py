@@ -18,7 +18,7 @@ class LxfSpider(scrapy.Spider):
         links = []
         self.parse_links(lxfItem['subMenus'][0], links)
         for link in links:
-            yield scrapy.Request("https://" + LxfSpider.allowed_domains[0] + link, callback=self.parse_content)
+            yield scrapy.Request(link, callback=self.parse_content)
 
         yield lxfItem
 
@@ -35,7 +35,7 @@ class LxfSpider(scrapy.Spider):
             subItem['content'] = ''
             subItem['level'] = levelItem.xpath('./@depth')[0].extract()
             subItem['menuname'] = levelItem.xpath('./a/text()')[0].extract()
-            subItem['menuHref'] = levelItem.xpath('./a/@href')[0].extract()
+            subItem['menuHref'] = "https://" + LxfSpider.allowed_domains[0] + levelItem.xpath('./a/@href')[0].extract()
 
             lxfItem['subMenus'].append(subItem)
 
@@ -45,9 +45,10 @@ class LxfSpider(scrapy.Spider):
         contentStr = ''
         contents = response.xpath('//div[@class="x-wiki-content x-main-content"]/*/text()')
         for content in contents:
-            contentStr = contentStr + content.extract()
+            contentStr = contentStr + content.extract() + '\n'
 
         lxfItem = LxfItem()
         lxfItem['content'] = contentStr
+        lxfItem['menuHref'] = response.url
 
         yield lxfItem
