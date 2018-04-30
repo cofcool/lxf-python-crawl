@@ -37,7 +37,7 @@ class LxfPipeline(object):
         for l in range(int(level)):
             levelStr = levelStr + '#'
 
-        return levelStr + ' [' + menuname + ']' + '(' + self.get_name(menuHref) + '.md)\n';
+        return levelStr + ' [' + menuname + ']' + '(./' + self.get_name(menuHref) + '.md)\n';
 
     def get_name(self, url):
         return url.split('/')[-1]
